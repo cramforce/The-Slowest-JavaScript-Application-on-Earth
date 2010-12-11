@@ -25,10 +25,54 @@ function animate() {
       parseInt(window.getComputedStyle(document.getElementById('box')).top) + direction + 'px';
     document.getElementById('box').style.left = 
       parseInt(window.getComputedStyle(document.getElementById('box')).left) + direction + 'px';
+
+    // change colors too
+    var boxEl = document.getElementById('box');
+    var childNodes = boxEl.childNodes;
+    for (var j=0; j < childNodes.length; j++) {
+    	var row = childNodes.item(j);
+        var divEl = row.childNodes;
+		for (var k=0; k < divEl.length; k++) {
+		  	var style = divEl.item(k).style;
+			var background = style["background-color"];
+			var arr = background.split(/,/);
+			var r = arr[0].replace(/rgb\(/, "");
+			var g = arr[1];
+			var b = arr[2];
+			
+			r = parseInt(r);
+			g = parseInt(g);
+			b = parseInt(b);
+			
+			r = upDown(divEl.item(k), 'r', r);
+			g = upDown(divEl.item(k), 'g', g);
+			b = upDown(divEl.item(k), 'b', b);
+			
+			style["background-color"] = "rgb(" + r + ", " + g + ", " + b + ")";
+		}
+    }
+
     if(++i % 128 === 0) {
       direction = direction * -1;
     }
   }, 1000 / 128);
+}
+
+function upDown(divEl, RorGorB, val){
+	var direction = divEl["data-" + RorGorB];
+	var newVal = val;
+	if (direction && direction === "up") {
+			newVal = newVal + 5;
+	} else {
+		newVal = newVal - 5;
+	}
+	
+	if (newVal > 255)
+		divEl["data-" + RorGorB] = "down";
+	if (newVal < 0) 
+		divEl["data-" + RorGorB] = "up";
+		
+	return newVal;
 }
 
 function moreText() {
