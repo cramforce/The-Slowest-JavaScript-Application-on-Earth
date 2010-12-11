@@ -8,34 +8,23 @@ var direction = +2;
 function animate() {
   var i = 0;
   var interval = setInterval(function () {
-	getElementWithId('box').style.top = 
-      parseInt(window.getComputedStyle(getElementWithId('box')).top) + direction + 'px';
-    getElementWithId('box').style.left = 
-      parseInt(window.getComputedStyle(getElementWithId('box')).left) + direction + 'px';
+    document.getElementById('box').style.top = 
+      parseInt(window.getComputedStyle(document.getElementById('box')).top) + direction + 'px';
+    document.getElementById('box').style.left = 
+      parseInt(window.getComputedStyle(document.getElementById('box')).left) + direction + 'px';
     if(++i % 128 === 0) {
       direction = direction * -1;
     }
   }, 1000 / 128);
 }
 
-function getElementWithId(id)
-{
-	var allElements = document.all;
-	for(i = document.all.length-1; i>=0; i--) {
-		var tag = document.all(i);
-		if (tag.id === id) {
-			return tag;
-		}
-	}
-}
-
 function moreText() {
-  var initialHeight = parseInt(window.getComputedStyle(getElementWithId('box')).height);
+  var initialHeight = parseInt(window.getComputedStyle(document.getElementById('box')).height);
   for(var i = 0; i < 100; i++) {
-    var before = getElementWithId('box').innerHTML;
-    getElementWithId('box').innerHTML += 'ABC<br>';
-    if(parseInt(window.getComputedStyle(getElementWithId('box')).height) > initialHeight) {
-      getElementWithId('box').innerHTML = before;
+    var before = document.getElementById('box').innerHTML;
+    document.getElementById('box').innerHTML += 'ABC<br>';
+    if(parseInt(window.getComputedStyle(document.getElementById('box')).height) > initialHeight) {
+      document.getElementById('box').innerHTML = before;
     }
   }
 }
@@ -44,8 +33,8 @@ function moreText() {
 window.onmousemove = function() {
   if(window.localStorage) {
     var pos = {
-      x: getElementWithId('box').style.left,
-      y: getElementWithId('box').style.top,
+      x: document.getElementById('box').style.left,
+      y: document.getElementById('box').style.top,
     }
     window.localStorage.setItem('position', JSON.stringify(pos));
   }
