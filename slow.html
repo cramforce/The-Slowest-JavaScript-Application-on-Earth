@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<style type="text/css">
+  #box {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 200px;
+    min-height: 200px;
+    background-color: red;
+  }
+</style>
+<script>
+
+function animate() {
+  var i = 0;
+  var interval = setInterval(function () {
+    document.getElementById('box').style.top = 
+      parseInt(window.getComputedStyle(document.getElementById('box')).top) + 1 + 'px';
+    document.getElementById('box').style.left = 
+      parseInt(window.getComputedStyle(document.getElementById('box')).left) + 1 + 'px';
+    if(i++ == 200) {
+      clearInterval(interval);
+    }
+  }, 1000 / 70);
+}
+
+function moreText() {
+  var initialHeight = parseInt(window.getComputedStyle(document.getElementById('box')).height);
+  for(var i = 0; i < 100; i++) {
+    var before = document.getElementById('box').innerHTML;
+    document.getElementById('box').innerHTML += 'ABC<br>';
+    if(parseInt(window.getComputedStyle(document.getElementById('box')).height) > initialHeight) {
+      document.getElementById('box').innerHTML = before;
+    }
+  }
+}
+
+</script>
+</head>
+<body onload="animate()">
+  <div id="box" onclick="moreText()"></div>
+</body>
+</html>
