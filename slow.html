@@ -3,7 +3,7 @@
 <head>
 <script>
 
-var direction = +1;
+var direction = +2;
 
 function animate() {
   var i = 0;
@@ -26,6 +26,17 @@ function moreText() {
     if(parseInt(window.getComputedStyle(document.getElementById('box')).height) > initialHeight) {
       document.getElementById('box').innerHTML = before;
     }
+  }
+}
+
+// Make sure we save our state to disk
+window.onmousemove = function() {
+  if(window.localStorage) {
+    var pos = {
+      x: document.getElementById('box').style.left,
+      y: document.getElementById('box').style.top,
+    }
+    window.localStorage.setItem('position', JSON.stringify(pos));
   }
 }
 
