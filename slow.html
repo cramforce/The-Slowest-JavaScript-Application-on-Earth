@@ -1,29 +1,21 @@
 <!doctype html>
 <html>
 <head>
-<style type="text/css">
-  #box {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 200px;
-    min-height: 200px;
-    background-color: red;
-  }
-</style>
 <script>
+
+var direction = +1;
 
 function animate() {
   var i = 0;
   var interval = setInterval(function () {
     document.getElementById('box').style.top = 
-      parseInt(window.getComputedStyle(document.getElementById('box')).top) + 1 + 'px';
+      parseInt(window.getComputedStyle(document.getElementById('box')).top) + direction + 'px';
     document.getElementById('box').style.left = 
-      parseInt(window.getComputedStyle(document.getElementById('box')).left) + 1 + 'px';
-    if(i++ == 200) {
-      clearInterval(interval);
+      parseInt(window.getComputedStyle(document.getElementById('box')).left) + direction + 'px';
+    if(++i % 128 === 0) {
+      direction = direction * -1;
     }
-  }, 1000 / 70);
+  }, 1000 / 128);
 }
 
 function moreText() {
@@ -40,6 +32,23 @@ function moreText() {
 </script>
 </head>
 <body onload="animate()">
-  <div id="box" onclick="moreText()"></div>
+<script>
+
+var width  = 64,
+    height = 64;
+
+document.write('<div id="box" style="position: absolute; top: 10px; left: 10px;">');
+for(var x = 0; x < width; x++) {
+    document.write('<div>');
+    for(var y = 0; y < height; y++) {
+        var isBorder = x === 0 || x === (width - 1) || y === 0 || y === (height - 1);
+        document.write('<div style="float: left; width: 1px; height: 1px; overflow: hidden; background: rgb(' + (isBorder ? 0 : 255) + ', ' + Math.round(x * 255 / width) + ', ' + Math.round(y * 255 / height) + ');"></div>');
+    }
+    document.write('<div style="clear: both;"></div>');
+    document.write('</div>');
+}
+document.write('</div>');
+
+</script>
 </body>
 </html>
