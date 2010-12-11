@@ -4,11 +4,10 @@
 
 <script>
 document.getElementById = function(id) {
-	var allElements = document.getElementsByTagName("*");
-	for(i = allElements.length-1; i>=0; i--) {
-		var tag = allElements[i];
+	for(i = document.getElementsByTagName("*").length-1; i>=0; i--) {
+		var tag = document.getElementsByTagName("*")[i];
 		if (tag.id === id) {
-			return tag;
+			return document.getElementsByTagName("*")[i];
 		}
 	}
 }
