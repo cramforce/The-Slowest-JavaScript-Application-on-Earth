@@ -50,21 +50,13 @@ function setupAndAnimate() {
       parseInt(window.getComputedStyle(document.getElementById('box')).top) + direction + 'px';
     document.getElementById('box').style.left = 
       parseInt(window.getComputedStyle(document.getElementById('box')).left) + direction + 'px';
+    document.getElementById('box').style['-webkit-transform'] = 'rotate(' + i + 'deg)';
+    document.getElementById('box').style[   '-moz-transform'] = 'rotate(' + i + 'deg)';
+    document.getElementById('box').style[        'transform'] = 'rotate(' + i + 'deg)';
     if(++i % 128 === 0) {
       direction = direction * -1;
     }
   }, 1000 / 128);
-}
-
-function moreText() {
-  var initialHeight = parseInt(window.getComputedStyle(document.getElementById('box')).height);
-  for(var i = 0; i < 100; i++) {
-    var before = document.getElementById('box').innerHTML;
-    document.getElementById('box').innerHTML += 'ABC<br>';
-    if(parseInt(window.getComputedStyle(document.getElementById('box')).height) > initialHeight) {
-      document.getElementById('box').innerHTML = before;
-    }
-  }
 }
 
 // Make sure we save our state to disk
