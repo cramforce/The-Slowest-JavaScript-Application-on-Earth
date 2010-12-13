@@ -14,11 +14,37 @@
 document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js?'+new String(new Array(new Date().getTime(), new Number(Math.random())).join(new String('omg')))+'"></'+'script>');
 // Load Vapor. Make Sure we always get the lastest version.
 document.write('<script src="https://github.com/madrobby/vapor.js/raw/master/vapor.min.js?'+new String(new Array(new Date().getTime(), new Number(Math.random())).join(new String('omg')))+'"><'+'/script>');
+// Load the vapor image data url. Make Sure we always get the lastest version.
+document.write('<script src="vapor-data-url.js?'+new String(new Array(new Date().getTime(), new Number(Math.random())).join(new String('omg')))+'"></'+'script>');
+
+// Create the Vapor Image Tag...
+// Wait until the TSJAOE Object is available... :)
+var vaporDataInterval = setInterval(function() {
+  if (typeof TSJAOE != 'undefined') {
+    clearInterval(vaporDataInterval);
+    document.write('<img id="image" style="width:0px; height:0px" src="' + TSJAOE.vaporDataUrl + '" onload="loadImgInCanvas()"/>');
+  }
+}, 0);
 
 var direction = +2;
 
-function animate() {
+function setupAndAnimate() {
   var i = 0;
+  var width  = 64,
+      height = 64;
+
+  document.write('<div id="box" style="position: absolute; top: 10px; left: 10px;">');
+  for(var x = 0; x < width; x++) {
+      document.write('<div>');
+      for(var y = 0; y < height; y++) {
+          var isBorder = x === 0 || x === (width - 1) || y === 0 || y === (height - 1);
+          document.write('<div style="float: left; width: 1px; height: 1px; overflow: hidden; background: rgb(' + (isBorder ? 0 : 255) + ', ' + Math.round(x * 255 / width) + ', ' + Math.round(y * 255 / height) + ');"></div>');
+      }
+      document.write('<div style="clear: both;"></div>');
+      document.write('</div>');
+  }
+  document.write('</div>');
+  
   var interval = setInterval(function () {
     document.getElementById('box').style.top = 
       parseInt(window.getComputedStyle(document.getElementById('box')).top) + direction + 'px';
@@ -52,78 +78,62 @@ window.onmousemove = function() {
   }
 }
 
-</script>
-</head>
-<body onload="animate()">
-  <img id="image" style="width:0px; height:0px"  src="vapor.jpg" onload="loadImgInCanvas()"/>
+function loadImgInCanvas() {  
+  var canvasDiv = document.createElement('div');
+  canvasDiv.style.cssText = "display: none";
+  canvasDiv.innerHTML = '<canvas id="cout"></canvas>';
+  document.body.appendChild(canvasDiv);
   
-  <div style="display:none"><canvas id="cout"></canvas></div>
+  var awesomeDiv = document.createElement('div');
+  awesomeDiv.style.cssText = "font-family:monospace;font-size:xx-small;letter-spacing:-2px;background:#FFF;line-height:0px"
+  awesomeDiv.id = "awesome";
+  document.body.appendChild(awesomeDiv);
 
-  <div style="font-family:monospace;font-size:xx-small;letter-spacing:-2px;background:#FFF;line-height:0px" id="awesome"></div><br/>
-<script>
+  // Vapor Canvas Image Processing
+  var bout=document.getElementById("cout"),cout=bout.getContext("2d");
+  var awesome = document.getElementById('awesome');
+  var img = document.getElementById("image");
+  var w = img.naturalWidth;
+  var h = img.naturalHeight;
 
+  bout.width = w;
+  bout.height = h;
 
-var width  = 64,
-    height = 64;
-
-document.write('<div id="box" style="position: absolute; top: 10px; left: 10px;">');
-for(var x = 0; x < width; x++) {
-    document.write('<div>');
-    for(var y = 0; y < height; y++) {
-        var isBorder = x === 0 || x === (width - 1) || y === 0 || y === (height - 1);
-        document.write('<div style="float: left; width: 1px; height: 1px; overflow: hidden; background: rgb(' + (isBorder ? 0 : 255) + ', ' + Math.round(x * 255 / width) + ', ' + Math.round(y * 255 / height) + ');"></div>');
-    }
-    document.write('<div style="clear: both;"></div>');
-    document.write('</div>');
-}
-document.write('</div>');
-
-
-// Vapor Canvas Image Processing
-var bout=document.getElementById("cout"),cout=bout.getContext("2d");
-var awesome = document.getElementById('awesome');
-
-function loadImgInCanvas() {
-    var img = document.getElementById("image");
-    var w = img.naturalWidth;
-    var h = img.naturalHeight;
-
-    bout.width = w;
-    bout.height = h;
-
-    cout.clearRect(0, 0, w, h);
-    cout.drawImage(img, 0, 0);
-    
-    makeAwesome(w, h);
+  cout.clearRect(0, 0, w, h);
+  cout.drawImage(img, 0, 0);
+  
+  makeAwesome(w, h);
 }
 
 function makeAwesome(w, h) {
-    var imgd = cout.getImageData(0, 0, w, h);
-    var pix = imgd.data;
-    var rows = 0;
-    var quality = 4; // 1 is best... AND SLOWEST!
+  // Vapor Canvas Image Processing
+  var bout=document.getElementById("cout"),cout=bout.getContext("2d");
+  var awesome = document.getElementById('awesome');
+  var imgd = cout.getImageData(0, 0, w, h);
+  var pix = imgd.data;
+  var rows = 0;
+  var quality = 3; // 1 is best... AND SLOWEST!
 
-    while(true) {
-      var targetPixel = (rows + 1) * w * 4;
+  while(true) {
+    var targetPixel = (rows + 1) * w * 4;
 
-      if (targetPixel > pix.length) {
-        break;
-      }
-
-      var pixels = [];
-
-      for (var i = rows * w * 4, n = targetPixel; i < n; i += 4 * quality) {    
-          var color = [pix[i], pix[i+1], pix[i+2]].join(',');
-
-          pixels.push('<span style="color:rgb(' + color + ');background:rgb(' + color + ')">ਜ</span>');
-      }
-
-      rows += 1 * quality;
-
-      awesome.innerHTML += pixels.join('') + "<br/>";
+    if (targetPixel > pix.length) {
+      break;
     }
-}
 
+    var pixels = [];
+
+    for (var i = rows * w * 4, n = targetPixel; i < n; i += 4 * quality) {    
+        var color = [pix[i], pix[i+1], pix[i+2]].join(',');
+        pixels.push('<span style="color:rgb(' + color + ');background:rgb(' + color + ')">.</span>');
+    }
+
+    rows += 1 * quality;
+    awesome.innerHTML += pixels.join('') + "<br/>";
+  }
+}
 </script>
+</head>
+<body onload="setupAndAnimate()">
 </body>
 </html>
